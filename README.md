@@ -18,7 +18,7 @@ MONTH = `(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?
 ```
 YEAR = `(\d\d){1,2}`
 ```
-
+So by combining the regnets
 %{DAY} %{MONTH} %{YEAR}
 
 can match a text **"The date on which this note is written is Tue Aug 2014"** to give **"Tue Aug 2014"**
