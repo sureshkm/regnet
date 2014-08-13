@@ -1,4 +1,4 @@
-regnet
+regnet (Work In Progress)
 ======
 
 Complex regular expressions from simple manageable regex units
