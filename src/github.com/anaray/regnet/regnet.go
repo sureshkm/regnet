@@ -48,12 +48,33 @@ func (regnet *Regnet) AddPattern(name, pattern string) (err error) {
 	r := regnet.Patterns[blockIdent].Compiled
 	slices := r.FindAllString(pattern, -1)
 	for indx := range slices {
-		fmt.Println(regnet.Patterns[blockKey].Compiled.FindString(slices[indx]))
+		//fmt.Println(">>" ,regnet.Patterns[blockKey].Compiled.FindString(slices[indx]))
 
+		key := regnet.Patterns[blockKey].Compiled.FindString(slices[indx])
+		//fmt.Println("KEY > ", key)
+		raw := regnet.Patterns[key].raw
+		//fmt.Println("RAW > ", raw)
+		if  raw != "" {
+			fmt.Println("RAW NOT NULL")
+		}else{
+			fmt.Println("RAW NULL")
+		}
 	}
+
+	//  contains only Regnet, so get the value and compile it
+	//fmt.Println("slice :", slices, " name " , name ," pattern " , pattern)
+	compiled, err := regexp.Compile(pattern)
+	if err != nil {
+		return err
+	}
+	patternCompiled := Pattern{name, compiled}
+	regnet.Patterns[name] = patternCompiled
+	fmt.Println(regnet.Patterns)
+
 	return nil
 	
 }
+
 
 /*func (regnet *Regnet) AddPattern(name, pattern string) (err error) {
 	var unResolvedRegnetBlck = regnet.Patterns[blockIdent].Compiled.FindString(pattern)
