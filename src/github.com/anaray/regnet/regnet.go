@@ -34,7 +34,6 @@ func New() (r *Regnet, err error) {
 	blockPattern := Pattern{blockIdent, regentBlock}
 	patterns := make(map[string]Pattern)
 	patterns[blockIdent] = blockPattern
-
 	regentKey, err := regexp.Compile(`[\w]+`)
 	if err != nil {
 		return nil, err
@@ -52,7 +51,6 @@ func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
 
 	r := regnet.Patterns[blockIdent].Compiled
 	slices := r.FindAllString(pattern, -1)
-
 	for indx := range slices {
 		key := regnet.Patterns[blockKey].Compiled.FindString(slices[indx])
 		value, present := regnet.GetPattern(key)
@@ -63,7 +61,6 @@ func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
 			pattern = strings.Replace(pattern, "%{"+key+"}", value.Compiled.String(), -1)
 		}
 	}
-
 	//  contains only Regnet, so get the value and compile it
 	compiled, err := regexp.Compile(pattern)
 	if err != nil {
@@ -85,15 +82,6 @@ func (regnet *Regnet) GetPattern(name string) (pattern Pattern, present bool) {
 	pattern, present = regnet.Patterns[name]
 	return pattern, present
 }
-
-/*func Patterns(path string) *Regnet {
-	_, err := filepath.Glob(path)
-	if err == nil {
-
-		}else{
-			fmt.Fprintln(os.Stderr, err)
-		}
-}*/
 
 /*func init() {
 	files, err := filepath.Glob("/home/msi/Downloads/logstash-1.4.0/patterns/*")
