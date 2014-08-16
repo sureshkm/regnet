@@ -3,6 +3,7 @@ package main
 //import "github.com/anaray/regnet"
 import (
 	//"fmt"
+	//"errors"
 	"github.com/anaray/regnet"
 )
 
@@ -35,9 +36,9 @@ func main() {
 
 	r, _ := regnet.New()
 	r.AddPattern("DAY", `(?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)`)
-	//r.AddPattern("YEAR", `(\d\d){1,2}`)
-	//r.AddPattern("TEXT", `%{DAY} , %{YEAR}`)
-
+	r.AddPattern("YEAR", `(\d\d){1,2}`)
+	r.AddPattern("TEXT", `%{DAY} , %{YEAR}`)
+	
 	//fmt.Println(r.Patterns["REGNET_BLOCK"].Compiled)
 	//fmt.Println(r.patterns["REGNET_BLOCK"].compiled)
 	//}

@@ -3,12 +3,12 @@ package regnet
 import (
 	//"bufio"
 	"fmt"
-	//"errors"
+	"errors"
 	"regexp"
 	//"io"
 	//"os"
 	//"path/filepath"
-	//"strings"
+	"strings"
 )
 
 type Regnet struct {
@@ -25,8 +25,8 @@ const (
 	blockKey string = "REGNET_KEY"
 )
 
+//
 func New() (r *Regnet, err error) {
-	//const blockIdent string = "REGNET_BLOCK"
 	regentBlock, err := regexp.Compile(`\%{([^}]+)\}`)
 	if err != nil {
 		return nil, err
@@ -44,25 +44,27 @@ func New() (r *Regnet, err error) {
 	return &Regnet{patterns}, nil
 }
 
-func (regnet *Regnet) AddPattern(name, pattern string) (err error) {
+//
+func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
+	if _,present := regnet.GetPattern(name); present == true {
+		return errors.New("regnet: pattern " + name + " already exists.")
+	}
+
 	r := regnet.Patterns[blockIdent].Compiled
 	slices := r.FindAllString(pattern, -1)
-	for indx := range slices {
-		//fmt.Println(">>" ,regnet.Patterns[blockKey].Compiled.FindString(slices[indx]))
 
+	for indx := range slices {
 		key := regnet.Patterns[blockKey].Compiled.FindString(slices[indx])
-		//fmt.Println("KEY > ", key)
-		raw := regnet.Patterns[key].raw
-		//fmt.Println("RAW > ", raw)
-		if  raw != "" {
-			fmt.Println("RAW NOT NULL")
+		value, present := regnet.GetPattern(key)
+		if present == false {
+			return errors.New("regnet: pattern " + key + " not found. Define it before " + name + " regnet.")
 		}else{
-			fmt.Println("RAW NULL")
+			//replace regent this its derefrenced pattern string
+			pattern = strings.Replace(pattern, "%{" + key + "}", value.Compiled.String(),-1)
 		}
 	}
 
 	//  contains only Regnet, so get the value and compile it
-	//fmt.Println("slice :", slices, " name " , name ," pattern " , pattern)
 	compiled, err := regexp.Compile(pattern)
 	if err != nil {
 		return err
@@ -72,57 +74,16 @@ func (regnet *Regnet) AddPattern(name, pattern string) (err error) {
 	fmt.Println(regnet.Patterns)
 
 	return nil
-	
 }
-
-
-/*func (regnet *Regnet) AddPattern(name, pattern string) (err error) {
-	var unResolvedRegnetBlck = regnet.Patterns[blockIdent].Compiled.FindString(pattern)
-
-	for {
-
-		fmt.Println(" unResolvedRegnetBlck >" + unResolvedRegnetBlck)
-
-		var unResolvedRegnetKey = regnet.Patterns[blockKey].Compiled.FindString(unResolvedRegnetBlck)
-		fmt.Println(" unResolvedRegnetKey >" + unResolvedRegnetKey)
-	}
-
-	///do it here
-
-	compiled, err := regexp.Compile(pattern)
-	if err != nil {
-		return err
-	}
-	regnet.Patterns[name] = Pattern{pattern, compiled}
-	return nil
-}*/
 
 //regnets.MatchInText("Tue May 15 11:21:42 [conn1047685] moveChunk deleted: 7157")
 func (regnet *Regnet) MatchInText(text string) {
 
 }
 
-/*func (regnet *Regnet) GetPattern(name string) (val string, present bool) {
-	pattern, present := regnet.patterns[name]
+func (regnet *Regnet) GetPattern(name string) (pattern Pattern, present bool) {
+	pattern, present = regnet.Patterns[name]
 	return pattern, present
-}
-
-//Get the pattern from Regnet and compile and replace value (pattern) with compiled result!
-// OR
-// Create a graph with with compiled regex pattern with relation(name) across
-func (regnet *Regnet) Compile(name string) (compiled string, err error) {
-	pattern, present := regnet.GetPattern(name)
-	if present == false {
-		return "", errors.New("regnet: pattern" + name + "not found")
-	}
-
-	return pattern, nil
-
-
-}*/
-
-func main() {
-	fmt.Println("here")
 }
 
 /*func Patterns(path string) *Regnet {
