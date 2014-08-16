@@ -2,8 +2,8 @@ package regnet
 
 import (
 	//"bufio"
-	"fmt"
 	"errors"
+	"fmt"
 	"regexp"
 	//"io"
 	//"os"
@@ -22,7 +22,7 @@ type Pattern struct {
 
 const (
 	blockIdent string = "REGNET_BLOCK"
-	blockKey string = "REGNET_KEY"
+	blockKey   string = "REGNET_KEY"
 )
 
 //
@@ -46,7 +46,7 @@ func New() (r *Regnet, err error) {
 
 //
 func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
-	if _,present := regnet.GetPattern(name); present == true {
+	if _, present := regnet.GetPattern(name); present == true {
 		return errors.New("regnet: pattern " + name + " already exists.")
 	}
 
@@ -58,9 +58,9 @@ func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
 		value, present := regnet.GetPattern(key)
 		if present == false {
 			return errors.New("regnet: pattern " + key + " not found. Define it before " + name + " regnet.")
-		}else{
+		} else {
 			//replace regent this its derefrenced pattern string
-			pattern = strings.Replace(pattern, "%{" + key + "}", value.Compiled.String(),-1)
+			pattern = strings.Replace(pattern, "%{"+key+"}", value.Compiled.String(), -1)
 		}
 	}
 
