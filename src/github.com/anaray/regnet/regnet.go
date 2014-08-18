@@ -53,6 +53,7 @@ func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
 	slices := r.FindAllString(pattern, -1)
 	for indx := range slices {
 		key := regnet.Patterns[blockKey].Compiled.FindString(slices[indx])
+		fmt.Println("KEY > " + key)
 		value, present := regnet.GetPattern(key)
 		if present == false {
 			return errors.New("regnet: pattern " + key + " not found. Define it before " + name + " regnet.")
@@ -69,12 +70,29 @@ func (regnet *Regnet) AddPattern(name string, pattern string) (err error) {
 	patternCompiled := Pattern{name, compiled}
 	regnet.Patterns[name] = patternCompiled
 	fmt.Println(regnet.Patterns)
-
 	return nil
 }
 
 //regnets.MatchInText("Tue May 15 11:21:42 [conn1047685] moveChunk deleted: 7157")
-func (regnet *Regnet) MatchInText(text string) {
+func (regnet *Regnet) MatchInText(text, patterns string) {
+	regnets := regnet.Patterns[blockIdent].Compiled.FindAllString(patterns, -1)
+	
+	for i := range regnets {
+		r := regnets[i]
+		stripped := regnet.Patterns[blockKey].Compiled.FindString(r)
+		fmt.Println(" -- " , stripped)
+		pattern, present := regnet.GetPattern(stripped)
+		fmt.Println(" ------ ", pattern, " ---- ", present)
+	}
+
+
+	/*for i := range patterns {
+        fmt.Println(" <> ", patterns[i])
+        regnets := r.FindAllString(patterns[i], -1)
+        fmt.Println(" >> " , regnets)
+        //regnetStripped := regnet.Patterns[blockKey].Compiled.FindString(regnets)
+        //fmt.Println(" <pattern> ", regnetStripped)
+    }*/
 
 }
 

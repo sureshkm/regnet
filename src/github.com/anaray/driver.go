@@ -39,6 +39,8 @@ func main() {
 	r.AddPattern("YEAR", `(\d\d){1,2}`)
 	r.AddPattern("TEXT", `%{DAY} , %{YEAR}`)
 
+	r.MatchInText("Tue May 15 11:21:42 [conn1047685] moveChunk deleted: 7157","%{DAY} May %{YEAR}")
+
 	//fmt.Println(r.Patterns["REGNET_BLOCK"].Compiled)
 	//fmt.Println(r.patterns["REGNET_BLOCK"].compiled)
 	//}
